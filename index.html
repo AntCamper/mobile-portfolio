@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AntCamperPortfolio</title>
+  <title>Pokémon-Style Portfolio</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/nes.css/2.3.0/css/nes.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
@@ -11,44 +11,43 @@
       background-color: #212529;
       font-family: 'Press Start 2P', cursive;
       color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
       margin: 0;
-      padding: 20px;
+      padding: 0;
+      overflow: hidden;
+      height: 100vh;
     }
     
     .container {
-      max-width: 800px;
-      text-align: center;
+      max-width: 100%;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
     
     .intro-screen {
       background-color: #000;
-      padding: 2rem;
+      padding: 1.5rem;
       border-radius: 4px;
       border: 4px solid white;
+      width: 90%;
+      max-width: 500px;
+      text-align: center;
     }
     
     .profile-container {
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
     }
     
     .intro-text {
-      margin: 2rem 0;
+      margin: 1.5rem 0;
       line-height: 1.6;
-    }
-    
-    .game-area {
-      margin-top: 2rem;
-      height: 300px;
-      border: 4px solid #fff;
-      display: none;
+      font-size: 0.7rem;
     }
     
     .start-btn {
-      margin: 2rem auto;
+      margin: 1.5rem auto;
       background-color: #e76e55;
     }
     
@@ -58,62 +57,600 @@
       transition: all 0.2s ease;
     }
     
-    .nes-btn {
-      margin: 0 0.5rem;
-    }
-    
     .flicker {
       animation: flicker 1.75s infinite alternate;
     }
     
     @keyframes flicker {
-      0% {
-        opacity: 1;
-      }
-      50% {
-        opacity: 1;
-      }
-      80% {
-        opacity: 0.8;
-      }
-      100% {
-        opacity: 1;
-      }
+      0% { opacity: 1; }
+      50% { opacity: 1; }
+      80% { opacity: 0.8; }
+      100% { opacity: 1; }
+    }
+    
+    /* Game elements */
+    .game-container {
+      display: none;
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #71aa34; /* Pokemon grass color */
+    }
+    
+    .game-world {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+    }
+    
+    .player {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      background-color: red;
+      transition: top 0.2s, left 0.2s;
+      z-index: 2;
+    }
+    
+    .tile {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+    }
+    
+    .grass {
+      background-color: #71aa34;
+    }
+    
+    .path {
+      background-color: #e6d07b;
+    }
+    
+    .water {
+      background-color: #5a9bd5;
+    }
+    
+    .building {
+      background-color: #8e4242;
+    }
+    
+    .wall {
+      background-color: #333;
+    }
+    
+    .sign {
+      background-color: #cf8f38;
+    }
+    
+    .npc {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      background-color: blue;
+      z-index: 1;
+    }
+    
+    .dialog-box {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 500px;
+      background-color: #000;
+      border: 4px solid #fff;
+      padding: 1rem;
+      display: none;
+      z-index: 10;
+      font-size: 0.6rem;
+      line-height: 1.5;
+    }
+    
+    .controls {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: 1fr 1fr 1fr;
+      gap: 5px;
+      width: 120px;
+      height: 120px;
+      z-index: 5;
+    }
+    
+    .control-btn {
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      border: 2px solid #fff;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      touch-action: manipulation;
+    }
+    
+    #up-btn {
+      grid-column: 2;
+      grid-row: 1;
+    }
+    
+    #left-btn {
+      grid-column: 1;
+      grid-row: 2;
+    }
+    
+    #action-btn {
+      grid-column: 2;
+      grid-row: 2;
+      background-color: rgba(231, 110, 85, 0.7);
+    }
+    
+    #right-btn {
+      grid-column: 3;
+      grid-row: 2;
+    }
+    
+    #down-btn {
+      grid-column: 2;
+      grid-row: 3;
+    }
+    
+    /* Info panels that appear when interacting with signs */
+    .info-panel {
+      position: absolute;
+      width: 80%;
+      height: 80%;
+      top: 10%;
+      left: 10%;
+      background-color: #000;
+      border: 4px solid #fff;
+      z-index: 20;
+      display: none;
+      padding: 1rem;
+      overflow-y: auto;
+    }
+    
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #e76e55;
+      font-size: 0.6rem;
+      padding: 0.5rem;
     }
   </style>
 </head>
 <body>
   <div class="container">
+    <!-- Intro Screen -->
     <div class="intro-screen nes-container">
       <h1 class="flicker">PORTFOLIO ADVENTURE</h1>
       
       <div class="profile-container">
         <div class="nes-container is-rounded">
-          <img src="assets/3f7fcda879fe3166023754f5a21b08ee.jpg" alt="Profile Picture" class="nes-avatar is-rounded is-large">
+          <img src="assets/3f7fcda879fe3166023754f5a21b08ee.jpg" alt="Profile Picture" class="nes-avatar is-rounded">
         </div>
       </div>
       
       <div class="intro-text">
-        <p class="nes-text">Welcome!</p>
+        <p class="nes-text">Welcome to my interactive portfolio!</p>
+        <p class="nes-text">Use the controls to move around and interact.</p>
         <p class="nes-text">Press START to begin.</p>
       </div>
       
       <button id="start-btn" class="nes-btn start-btn">START</button>
+    </div>
+    
+    <!-- Game Container -->
+    <div id="game-container" class="game-container">
+      <div id="game-world" class="game-world">
+        <!-- Player character -->
+        <div id="player" class="player"></div>
+        
+        <!-- Dialog box -->
+        <div id="dialog-box" class="dialog-box">
+          <p id="dialog-text"></p>
+        </div>
+      </div>
       
-      <div id="game-area" class="game-area">
-        <p class="nes-text">getting dressed!...</p>
+      <!-- Mobile controls -->
+      <div class="controls">
+        <div id="up-btn" class="control-btn">↑</div>
+        <div id="left-btn" class="control-btn">←</div>
+        <div id="action-btn" class="control-btn">A</div>
+        <div id="right-btn" class="control-btn">→</div>
+        <div id="down-btn" class="control-btn">↓</div>
+      </div>
+      
+      <!-- Info panels -->
+      <div id="about-panel" class="info-panel">
+        <button id="close-about" class="nes-btn close-btn">X</button>
+        <h2>About Me</h2>
+        <p>Hello! I'm AntCamper, a web developer who loves creating interactive experiences.</p>
+        <p>I specialize in front-end development, UI/UX design, and creating engaging web applications.</p>
+        <p>My passion is combining creativity with technical skills to build memorable digital experiences.</p>
+      </div>
+      
+      <div id="projects-panel" class="info-panel">
+        <button id="close-projects" class="nes-btn close-btn">X</button>
+        <h2>Projects</h2>
+        <div class="nes-container with-title is-dark">
+          <p class="title">Project 1</p>
+          <p>A responsive e-commerce website with shopping cart functionality.</p>
+          <p>Technologies: HTML, CSS, JavaScript, React</p>
+        </div>
+        <br>
+        <div class="nes-container with-title is-dark">
+          <p class="title">Project 2</p>
+          <p>Weather forecast application with location detection.</p>
+          <p>Technologies: JavaScript, APIs, Node.js</p>
+        </div>
+        <br>
+        <div class="nes-container with-title is-dark">
+          <p class="title">Project 3</p>
+          <p>Task management system with user authentication.</p>
+          <p>Technologies: MongoDB, Express, React, Node.js</p>
+        </div>
+      </div>
+      
+      <div id="skills-panel" class="info-panel">
+        <button id="close-skills" class="nes-btn close-btn">X</button>
+        <h2>Skills</h2>
+        <p>HTML/CSS</p>
+        <progress class="nes-progress is-success" value="90" max="100"></progress>
+        
+        <p>JavaScript</p>
+        <progress class="nes-progress is-warning" value="85" max="100"></progress>
+        
+        <p>React</p>
+        <progress class="nes-progress is-error" value="80" max="100"></progress>
+        
+        <p>Node.js</p>
+        <progress class="nes-progress is-primary" value="75" max="100"></progress>
+        
+        <p>MongoDB</p>
+        <progress class="nes-progress is-pattern" value="70" max="100"></progress>
+      </div>
+      
+      <div id="contact-panel" class="info-panel">
+        <button id="close-contact" class="nes-btn close-btn">X</button>
+        <h2>Contact</h2>
+        <div class="nes-container is-dark">
+          <p><i class="nes-icon star"></i> Email: example@email.com</p>
+          <p><i class="nes-icon star"></i> GitHub: github.com/antcamper</p>
+          <p><i class="nes-icon star"></i> LinkedIn: linkedin.com/in/antcamper</p>
+        </div>
       </div>
     </div>
   </div>
 
   <script>
-    document.getElementById('start-btn').addEventListener('click', function() {
-      document.querySelector('.intro-text').style.display = 'none';
-      this.style.display = 'none';
-      document.getElementById('game-area').style.display = 'block';
-      
-      console.log('Game started!');
+    // DOM Elements
+    const startBtn = document.getElementById('start-btn');
+    const introScreen = document.querySelector('.intro-screen');
+    const gameContainer = document.getElementById('game-container');
+    const gameWorld = document.getElementById('game-world');
+    const player = document.getElementById('player');
+    const dialogBox = document.getElementById('dialog-box');
+    const dialogText = document.getElementById('dialog-text');
+    
+    // Control buttons
+    const upBtn = document.getElementById('up-btn');
+    const leftBtn = document.getElementById('left-btn');
+    const rightBtn = document.getElementById('right-btn');
+    const downBtn = document.getElementById('down-btn');
+    const actionBtn = document.getElementById('action-btn');
+    
+    // Info panels
+    const aboutPanel = document.getElementById('about-panel');
+    const projectsPanel = document.getElementById('projects-panel');
+    const skillsPanel = document.getElementById('skills-panel');
+    const contactPanel = document.getElementById('contact-panel');
+    
+    // Close buttons
+    document.getElementById('close-about').addEventListener('click', () => {
+      aboutPanel.style.display = 'none';
     });
+    
+    document.getElementById('close-projects').addEventListener('click', () => {
+      projectsPanel.style.display = 'none';
+    });
+    
+    document.getElementById('close-skills').addEventListener('click', () => {
+      skillsPanel.style.display = 'none';
+    });
+    
+    document.getElementById('close-contact').addEventListener('click', () => {
+      contactPanel.style.display = 'none';
+    });
+    
+    // Game variables
+    let playerX = 5;
+    let playerY = 5;
+    const tileSize = 32;
+    let isDialogOpen = false;
+    
+    // Map definitions (0: grass, 1: path, 2: water, 3: building, 4: wall, 5-8: signs)
+    const mapWidth = 20;
+    const mapHeight = 15;
+    const gameMap = [
+      [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+      [4, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 4],
+      [4, 0, 0, 0, 0, 0, 1, 5, 0, 0, 0, 6, 1, 0, 0, 0, 0, 0, 0, 4],
+      [4, 0, 0, 3, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 3, 0, 0, 0, 4],
+      [4, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 4],
+      [4, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 4],
+      [4, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 4],
+      [4, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4],
+      [4, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4],
+      [4, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4],
+      [4, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4],
+      [4, 1, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 1, 4, 4],
+      [4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 4],
+      [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+      [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]
+    ];
+    
+    // Initialize game
+    function initGame() {
+      introScreen.style.display = 'none';
+      gameContainer.style.display = 'block';
+      
+      // Create map
+      createMap();
+      
+      // Set initial player position
+      updatePlayerPosition();
+      
+      // Add event listeners for controls
+      setupControls();
+    }
+    
+    // Create the game map
+    function createMap() {
+      for (let y = 0; y < mapHeight; y++) {
+        for (let x = 0; x < mapWidth; x++) {
+          const tile = document.createElement('div');
+          tile.className = 'tile';
+          
+          // Position the tile
+          tile.style.left = (x * tileSize) + 'px';
+          tile.style.top = (y * tileSize) + 'px';
+          
+          // Set tile type
+          switch(gameMap[y][x]) {
+            case 0:
+              tile.classList.add('grass');
+              break;
+            case 1:
+              tile.classList.add('path');
+              break;
+            case 2:
+              tile.classList.add('water');
+              break;
+            case 3:
+              tile.classList.add('building');
+              break;
+            case 4:
+              tile.classList.add('wall');
+              break;
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+              tile.classList.add('sign');
+              tile.dataset.signId = gameMap[y][x];
+              break;
+          }
+          
+          gameWorld.appendChild(tile);
+        }
+      }
+    }
+    
+    // Update player position on screen
+    function updatePlayerPosition() {
+      player.style.left = (playerX * tileSize) + 'px';
+      player.style.top = (playerY * tileSize) + 'px';
+    }
+    
+    // Set up control buttons
+    function setupControls() {
+      // Touch controls
+      upBtn.addEventListener('touchstart', moveUp);
+      leftBtn.addEventListener('touchstart', moveLeft);
+      rightBtn.addEventListener('touchstart', moveRight);
+      downBtn.addEventListener('touchstart', moveDown);
+      actionBtn.addEventListener('touchstart', interact);
+      
+      // Mouse controls (for desktop)
+      upBtn.addEventListener('click', moveUp);
+      leftBtn.addEventListener('click', moveLeft);
+      rightBtn.addEventListener('click', moveRight);
+      downBtn.addEventListener('click', moveDown);
+      actionBtn.addEventListener('click', interact);
+      
+      // Keyboard controls
+      document.addEventListener('keydown', (e) => {
+        if (isDialogOpen) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            closeDialog();
+          }
+          return;
+        }
+        
+        switch(e.key) {
+          case 'ArrowUp':
+          case 'w':
+            moveUp();
+            break;
+          case 'ArrowLeft':
+          case 'a':
+            moveLeft();
+            break;
+          case 'ArrowRight':
+          case 'd':
+            moveRight();
+            break;
+          case 'ArrowDown':
+          case 's':
+            moveDown();
+            break;
+          case 'Enter':
+          case ' ':
+            interact();
+            break;
+        }
+      });
+    }
+    
+    // Movement functions
+    function moveUp() {
+      if (isDialogOpen || isPanelOpen()) return;
+      
+      if (playerY > 0 && !isBlocked(playerX, playerY - 1)) {
+        playerY--;
+        updatePlayerPosition();
+      }
+    }
+    
+    function moveLeft() {
+      if (isDialogOpen || isPanelOpen()) return;
+      
+      if (playerX > 0 && !isBlocked(playerX - 1, playerY)) {
+        playerX--;
+        updatePlayerPosition();
+      }
+    }
+    
+    function moveRight() {
+      if (isDialogOpen || isPanelOpen()) return;
+      
+      if (playerX < mapWidth - 1 && !isBlocked(playerX + 1, playerY)) {
+        playerX++;
+        updatePlayerPosition();
+      }
+    }
+    
+    function moveDown() {
+      if (isDialogOpen || isPanelOpen()) return;
+      
+      if (playerY < mapHeight - 1 && !isBlocked(playerX, playerY + 1)) {
+        playerY++;
+        updatePlayerPosition();
+      }
+    }
+    
+    // Check if a tile is blocked (wall, water, building)
+    function isBlocked(x, y) {
+      if (x < 0 || y < 0 || x >= mapWidth || y >= mapHeight) return true;
+      
+      const tileType = gameMap[y][x];
+      return tileType === 2 || tileType === 3 || tileType === 4;
+    }
+    
+    // Interact with objects
+    function interact() {
+      if (isDialogOpen) {
+        closeDialog();
+        return;
+      }
+      
+      if (isPanelOpen()) {
+        closeAllPanels();
+        return;
+      }
+      
+      // Check adjacent tiles for signs
+      const adjacentTiles = [
+        {x: playerX, y: playerY - 1}, // up
+        {x: playerX - 1, y: playerY}, // left
+        {x: playerX + 1, y: playerY}, // right
+        {x: playerX, y: playerY + 1}  // down
+      ];
+      
+      for (const tile of adjacentTiles) {
+        if (tile.x >= 0 && tile.y >= 0 && tile.x < mapWidth && tile.y < mapHeight) {
+          const tileType = gameMap[tile.y][tile.x];
+          
+          if (tileType >= 5 && tileType <= 8) {
+            interactWithSign(tileType);
+            return;
+          }
+        }
+      }
+    }
+    
+    // Handle sign interactions
+    function interactWithSign(signId) {
+      switch(signId) {
+        case 5:
+          showDialog("About Me sign. Press A to learn more about me.");
+          setTimeout(() => {
+            closeDialog();
+            aboutPanel.style.display = 'block';
+          }, 2000);
+          break;
+        case 6:
+          showDialog("Projects sign. Press A to see my projects.");
+          setTimeout(() => {
+            closeDialog();
+            projectsPanel.style.display = 'block';
+          }, 2000);
+          break;
+        case 7:
+          showDialog("Skills sign. Press A to view my skills.");
+          setTimeout(() => {
+            closeDialog();
+            skillsPanel.style.display = 'block';
+          }, 2000);
+          break;
+        case 8:
+          showDialog("Contact sign. Press A to see my contact information.");
+          setTimeout(() => {
+            closeDialog();
+            contactPanel.style.display = 'block';
+          }, 2000);
+          break;
+      }
+    }
+    
+    // Show dialog
+    function showDialog(text) {
+      isDialogOpen = true;
+      dialogText.textContent = text;
+      dialogBox.style.display = 'block';
+    }
+    
+    // Close dialog
+    function closeDialog() {
+      isDialogOpen = false;
+      dialogBox.style.display = 'none';
+    }
+    
+    // Check if any panel is open
+    function isPanelOpen() {
+      return aboutPanel.style.display === 'block' || 
+             projectsPanel.style.display === 'block' || 
+             skillsPanel.style.display === 'block' || 
+             contactPanel.style.display === 'block';
+    }
+    
+    // Close all panels
+    function closeAllPanels() {
+      aboutPanel.style.display = 'none';
+      projectsPanel.style.display = 'none';
+      skillsPanel.style.display = 'none';
+      contactPanel.style.display = 'none';
+    }
+    
+    // Start the game when clicking the start button
+    startBtn.addEventListener('click', initGame);
   </script>
 </body>
 </html>
