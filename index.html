@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AntCamperPortfolio</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/nes.css/2.3.0/css/nes.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #212529;
+      font-family: 'Press Start 2P', cursive;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 800px;
+      text-align: center;
+    }
+    
+    .intro-screen {
+      background-color: #000;
+      padding: 2rem;
+      border-radius: 4px;
+      border: 4px solid white;
+    }
+    
+    .profile-container {
+      margin-bottom: 2rem;
+    }
+    
+    .intro-text {
+      margin: 2rem 0;
+      line-height: 1.6;
+    }
+    
+    .game-area {
+      margin-top: 2rem;
+      height: 300px;
+      border: 4px solid #fff;
+      display: none;
+    }
+    
+    .start-btn {
+      margin: 2rem auto;
+      background-color: #e76e55;
+    }
+    
+    .start-btn:hover {
+      background-color: #92cc41;
+      transform: scale(1.05);
+      transition: all 0.2s ease;
+    }
+    
+    .nes-btn {
+      margin: 0 0.5rem;
+    }
+    
+    .flicker {
+      animation: flicker 1.75s infinite alternate;
+    }
+    
+    @keyframes flicker {
+      0% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 1;
+      }
+      80% {
+        opacity: 0.8;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="intro-screen nes-container">
+      <h1 class="flicker">PORTFOLIO ADVENTURE</h1>
+      
+      <div class="profile-container">
+        <div class="nes-container is-rounded">
+          <img src="assets/3f7fcda879fe3166023754f5a21b08ee.jpg" alt="Profile Picture" class="nes-avatar is-rounded is-large">
+        </div>
+      </div>
+      
+      <div class="intro-text">
+        <p class="nes-text">Welcome!</p>
+        <p class="nes-text">Press START to begin.</p>
+      </div>
+      
+      <button id="start-btn" class="nes-btn start-btn">START</button>
+      
+      <div id="game-area" class="game-area">
+        <p class="nes-text">getting dressed!...</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('start-btn').addEventListener('click', function() {
+      document.querySelector('.intro-text').style.display = 'none';
+      this.style.display = 'none';
+      document.getElementById('game-area').style.display = 'block';
+      
+      console.log('Game started!');
+    });
+  </script>
+</body>
+</html>
